@@ -27,8 +27,10 @@
     "express-session": "^1.12.1",
     "kerberos": "0.0.17",
     "mongodb": "^2.0.48",
+    "morgan": "^1.6.1",
     "node-uuid": "^1.4.7",
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "winston": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "^1.9.0"

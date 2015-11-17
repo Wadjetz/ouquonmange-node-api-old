@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const router = require("./router");
+const logger = require("./logger");
+const morgan = require("morgan");
 
 module.exports = function (cluster) {
   const app = express();
@@ -20,6 +22,10 @@ module.exports = function (cluster) {
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true }
+  }));
+
+  app.use(morgan("combined", {
+    stream: logger.stream
   }));
 
   app.use("/", router);
