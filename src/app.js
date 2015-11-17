@@ -1,0 +1,35 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const router = require("./router");
+
+module.exports = function (cluster) {
+  const app = express();
+
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+
+  app.use(bodyParser.json());
+
+  app.use(cookieParser());
+
+  app.use(session({
+    secret: "sd6!sd*dguie5§TFGd0s+Rt=ZZE623",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  }));
+
+  app.use("/", router);
+
+  app.use(express.static("public"));
+
+  var server = app.listen(3000, () => {
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log(`App worker ${cluster.worker.id} listening at http://${host}:${port}`);
+  });
+};

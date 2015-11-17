@@ -1,0 +1,36 @@
+{
+  "name": "ouquonmange",
+  "version": "0.0.1",
+  "description": "Description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wadjetz/ouquonmange.git"
+  },
+  "keywords": [
+    "ouquonmange"
+  ],
+  "author": "Wadjetz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wadjetz/ouquonmange/issues"
+  },
+  "homepage": "https://github.com/wadjetz/ouquonmange#readme",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "bull": "^0.6.0",
+    "cookie-parser": "^1.4.0",
+    "express": "^4.13.3",
+    "express-session": "^1.12.1",
+    "kerberos": "0.0.17",
+    "mongodb": "^2.0.48",
+    "node-uuid": "^1.4.7",
+    "request": "^2.65.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.9.0"
+  }
+}
