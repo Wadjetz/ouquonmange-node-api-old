@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const router = require("./router");
 const logger = require("./logger");
+const conf = require("./config");
 const morgan = require("morgan");
 
 module.exports = function (cluster) {
@@ -24,9 +25,11 @@ module.exports = function (cluster) {
     cookie: { secure: true }
   }));
 
-  app.use(morgan("combined", {
-    stream: logger.stream
-  }));
+  if (conf.get("REQUEST_LOGS")) {
+    app.use(morgan("combined", {
+      stream: logger.stream
+    }));
+  }
 
   app.use("/", router);
 

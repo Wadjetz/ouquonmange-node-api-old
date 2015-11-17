@@ -1,14 +1,15 @@
 const request = require("request");
 const qs = require("querystring");
+const conf = require("../config");
 
-const CLIENT_ID = "X0RW5VUZGDQWTJ4G4FE3H3KUW2ZJWUVHOR5RALZOH5UEY34I";
-const CLIENT_SECRET = "DVYAVTHMYFZDLBGHYJKYM5BP1TSCLR5ZG2G4KQBPUVYFCRFX";
+const FOURSQUARE_CLIENT_ID = conf.get("FOURSQUARE_CLIENT_ID");
+const FOURSQUARE_CLIENT_SECRET = conf.get("FOURSQUARE_CLIENT_SECRET");
 
 module.exports.searchVenues = function (query, ll, v) {
   return new Promise((resolve, reject) => {
     request.get("https://api.foursquare.com/v2/venues/search?" + qs.encode({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+      client_id: FOURSQUARE_CLIENT_ID,
+      client_secret: FOURSQUARE_CLIENT_SECRET,
       ll: ll,
       v: v,
       query: query
@@ -29,8 +30,8 @@ module.exports.searchVenues = function (query, ll, v) {
 module.exports.exploreVenues = function (section, query, ll, v) {
   return new Promise((resolve, reject) => {
     request.get("https://api.foursquare.com/v2/venues/explore?" + qs.encode({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+      client_id: FOURSQUARE_CLIENT_ID,
+      client_secret: FOURSQUARE_CLIENT_SECRET,
       ll: ll,
       v: v,
       section: section,
