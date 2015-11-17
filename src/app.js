@@ -39,6 +39,6 @@ module.exports = function (cluster) {
     var host = server.address().address;
     var port = server.address().port;
 
-    console.log(`App worker ${cluster.worker.id} listening at http://${host}:${port}`);
+    logger.debug(`App worker ${cluster.worker.id} listening at http://${host}:${port}`);
   });
 };
