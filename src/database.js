@@ -1,10 +1,17 @@
 const Db = require("mongodb").Db;
 const Server = require("mongodb").Server;
+const logger = require("./logger");
+const conf = require("./config");
 
-const db = new Db("ouquonmange", new Server("localhost", 27017, { auto_reconnect: true }, {}));
+const mongoDbHost = conf.get("MONGODB_HOST") || "localhost";
+const mongoDbPort = conf.get("MONGODB_PORT") || 27017;
+
+const mongoDbServer = new Server(mongoDbHost, mongoDbPort, { auto_reconnect: true }, {});
+
+const db = new Db("ouquonmange", mongoDbServer);
 
 db.open(function(){
-  console.log("Mongodb connection open");
+  logger.debug("Mongodb connection open");
 });
 
 module.exports = db;

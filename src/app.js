@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const router = require("./router");
+const communityEventRouter = require("./event-sourcing/community-event-router");
 const logger = require("./logger");
 const conf = require("./config");
 const morgan = require("morgan");
@@ -32,6 +33,7 @@ module.exports = function (cluster) {
   }
 
   app.use("/", router);
+  app.use("/api", communityEventRouter);
 
   app.use(express.static("public"));
 

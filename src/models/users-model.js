@@ -4,15 +4,15 @@ const collection = DB.collection("users");
 
 module.exports.findByToken = function (token) {
   return new Promise(function(resolve, reject) {
-    collection.findOne({
+    collection.find({
       token: token
-    }, (error, user) => {
+    }).limit(1).count((error, user) => {
       if (error) reject(error);
       else if (user) resolve(user);
       else reject({
-        code: 404,
-        message: "User Not found"
-      });
+          code: 404,
+          message: "User Not found"
+        });
     });
   });
 };

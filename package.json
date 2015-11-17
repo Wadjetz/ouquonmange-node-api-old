@@ -26,6 +26,7 @@
     "express": "^4.13.3",
     "express-session": "^1.12.1",
     "kerberos": "0.0.17",
+    "lodash": "^3.10.1",
     "mongodb": "^2.0.48",
     "morgan": "^1.6.1",
     "nconf": "^0.8.2",
@@ -34,6 +35,9 @@
     "winston": "^2.1.0"
   },
   "devDependencies": {
-    "eslint": "^1.9.0"
+    "chai": "^3.4.1",
+    "eslint": "^1.9.0",
+    "mocha": "^2.3.4",
+    "should": "^7.1.1"
   }
 }

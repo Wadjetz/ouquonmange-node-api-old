@@ -11,6 +11,8 @@ module.exports = function () {
     for (var i=0; i < cpuCount; i++) {
       cluster.fork();
     }
+    require("./event-sourcing/community-event-queue");
+    require("./migration");
   } else {
     app(cluster);
   }
