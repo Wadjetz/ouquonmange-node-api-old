@@ -19,14 +19,14 @@ module.exports = function (cluster) {
   app.use(cookieParser());
 
   app.use(session({
-    secret: "sd6!sd*dguie5§TFGd0s+Rt=ZZE623",
+    secret: conf.get("APP_SESSION_SECRET"),
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true }
   }));
 
   if (conf.get("REQUEST_LOGS")) {
-    app.use(morgan("combined", {
+    app.use(morgan(conf.get("REQUEST_LOGS_TYPE"), {
       stream: logger.stream
     }));
   }
@@ -35,7 +35,7 @@ module.exports = function (cluster) {
 
   app.use(express.static("public"));
 
-  var server = app.listen(3000, () => {
+  var server = app.listen(conf.get("APP_NODEJS_PORT"), () => {
     var host = server.address().address;
     var port = server.address().port;
 
