@@ -17,6 +17,7 @@ router.get("/community", (req, res) => {
 router.post("/community", (req, res) => {
   // TODO Validate data
   const communityName = req.body.name;
+  const communityDescription = req.body.description;
   const communityId = uuid.v4();
 
   communitiesModel.exist(communityName).then(isExist => {
@@ -30,6 +31,7 @@ router.post("/community", (req, res) => {
         data: {
           community_id: communityId,
           name: communityName,
+          description: communityDescription,
           user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
         }
       }).then(() => {
@@ -41,6 +43,28 @@ router.post("/community", (req, res) => {
   }).catch(error => {
     logger.error(error);
     res.status(500).json(error); // TODO Security: too much info in error
+  });
+});
+
+router.put("/community/:community_id", (req, res) => {
+  const community_id = req.params.community_id;
+  const user = {
+    user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
+  };
+  const update = req.body;
+  communitiesModel.findById(community_id).then(community => {
+    return communityEventQueue.add({
+      type: communityCommands.community_update,
+      data: {
+        community_id: community_id,
+        user: user,
+        update: update
+      }
+    });
+  }).then(() => {
+    res.json(update);
+  }).catch(error => {
+    res.status(error.code).json(error);
   });
 });
 

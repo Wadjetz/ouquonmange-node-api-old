@@ -71,6 +71,24 @@ module.exports.exist = function (communityName) {
   });
 };
 
+module.exports.update = function(communityId, communityUpdate) {
+  return new Promise((resolve, reject) => {
+    const query = {
+      community_id: communityId
+    };
+    const update = {
+      $set: communityUpdate
+    };
+    const options = {
+      returnOriginal: false
+    };
+    collection.findOneAndUpdate(query, update, options, (error, events) => {
+      if (error) reject(error);
+      else resolve(events);
+    });
+  });
+};
+
 module.exports.addUser = function (community_id, user_id) {
   return new Promise(function(resolve, reject) {
 

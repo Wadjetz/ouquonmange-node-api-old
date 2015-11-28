@@ -11,6 +11,28 @@ const communityEventQueue = BullQueue("community_event_queue", conf.get("REDIS_P
 
 // TODO refactor this code for remove code duplication
 
+function processCommunity(command, done) {
+  es.findByCommunityId(command.data.community_id).then(events => {
+    logger.debug("findByCommunityId =", events.length);
+    return computeCommunityState(events);
+  }).then(state => {
+    logger.debug("computeCommunityState =", state);
+    return computeCommunityCommand(command, state);
+  }).then(resultEvents => {
+    logger.debug("computeCommunityCommand = ", resultEvents.length);
+    return Promise.all(resultEvents.map(event => es.insert(event)));
+  }).then(insertedEvents => {
+    logger.debug("insertedEvents = ", insertedEvents.length);
+    return Promise.all(insertedEvents.map(event => communityProjection(event)));
+  }).then(projectedEvents => {
+    logger.debug("projectedEvents = ", projectedEvents.length);
+    done();
+  }).catch(error => {
+    logger.error("error =", error);
+    done();
+  });
+}
+
 communityEventQueue.process((job, done) => {
   const command = job.data;
   logger.debug("EventQueue process command: ", command);
@@ -33,25 +55,10 @@ communityEventQueue.process((job, done) => {
       });
       break;
     case communityCommands.community_add_user:
-      es.findByCommunityId(command.data.community_id).then(events => {
-        logger.debug("findByCommunityId =", events.length);
-        return computeCommunityState(events);
-      }).then(state => {
-        logger.debug("computeCommunityState =", state);
-        return computeCommunityCommand(command, state);
-      }).then(resultEvents => {
-        logger.debug("computeCommunityCommand = ", resultEvents.length);
-        return Promise.all(resultEvents.map(event => es.insert(event)));
-      }).then(insertedEvents => {
-        logger.debug("insertedEvents = ", insertedEvents.length);
-        return Promise.all(insertedEvents.map(event => communityProjection(event)));
-      }).then(projectedEvents => {
-        logger.debug("projectedEvents = ", projectedEvents.length);
-        done();
-      }).catch(error => {
-        logger.error("error =", error);
-        done();
-      });
+      processCommunity(command, done);
+      break;
+    case communityCommands.community_update:
+      processCommunity(command, done);
       break;
     case communityCommands.community_migration:
       logger.warn("process migration");

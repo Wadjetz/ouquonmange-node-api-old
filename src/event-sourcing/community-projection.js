@@ -13,11 +13,14 @@ function projection(event) {
       return communitiesModel.insert({
         community_id: event.community_id,
         name: event.name,
+        description: event.description,
         created: event.created,
         users: []
       });
     case communityEvents.community_user_added:
       return communitiesModel.addUser(event.community_id, event.user_id);
+    case communityEvents.community_updated:
+      return communitiesModel.update(event.community_id, event.update);
     default:
       return Promise.reject("projection unknown event");
   }

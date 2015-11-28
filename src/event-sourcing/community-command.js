@@ -12,20 +12,21 @@ const communityCommands = require("./community-constants").commands;
 function computeCommunityCommand(command, state) {
   return new Promise(function(resolve, reject) {
     switch (command.type) {
-      case communityCommands.community_create: {
+      case communityCommands.community_create:
         resolve([{
           event_id: uuid.v4(),
           event_type: communityEvents.community_created,
           community_id: command.data.community_id,
-          name: command.data.name
+          name: command.data.name,
+          description: command.data.description
         }, {
           event_id: uuid.v4(),
           event_type: communityEvents.community_user_added,
           community_id: command.data.community_id,
           user_id: command.data.user_id
         }]);
-      }
-      case communityCommands.community_add_user: {
+        break;
+      case communityCommands.community_add_user:
         if (lodash.contains(state.users, command.data.user_id)) {
           reject({
             message: command.data.user_id + " user already added"
@@ -38,7 +39,25 @@ function computeCommunityCommand(command, state) {
             user_id: command.data.user_id
           }]);
         }
-      }
+        break;
+      case communityCommands.community_update:
+        var update = {};
+        console.log("COMMAND", command);
+        if (command.data.update["name"]) {
+          update["name"] = command.data.update["name"];
+        }
+        if (command.data.update["description"]) {
+          update["description"] = command.data.update["description"];
+        }
+        var event = {
+          event_id: uuid.v4(),
+          event_type: communityEvents.community_updated,
+          community_id: command.data.community_id,
+          update: update
+        };
+        console.log("COMMAND event =", event);
+        resolve([event]);
+        break;
       default: reject({
         message: "unknown command"
       });
