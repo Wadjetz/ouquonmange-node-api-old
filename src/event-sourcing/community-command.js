@@ -43,21 +43,19 @@ function computeCommunityCommand(command, state) {
         }
         break;
       case communityCommands.community_update:
-        var update = {};
-        console.log("COMMAND", command);
+        let update = {};
         if (command.data.update["name"]) {
           update["name"] = command.data.update["name"];
         }
         if (command.data.update["description"]) {
           update["description"] = command.data.update["description"];
         }
-        var event = {
+        let event = {
           event_id: uuid.v4(),
           event_type: communityEvents.community_updated,
           community_id: command.data.community_id,
           update: update
         };
-        console.log("COMMAND event =", event);
         resolve([event]);
         break;
       default: reject({
