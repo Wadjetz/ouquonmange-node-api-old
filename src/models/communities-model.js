@@ -44,6 +44,21 @@ module.exports.findAll = function () {
   });
 };
 
+module.exports.findById = function (communityId) {
+  return new Promise((resolve, reject) => {
+    collection.find({
+      community_id: communityId
+    }).limit(1).next((error, community) => {
+      if (error) reject(error);
+      else if (community) resolve(community);
+      else reject({
+        code: 404,
+        message: "Not found"
+      });
+    });
+  });
+};
+
 module.exports.exist = function (communityName) {
   return new Promise(function(resolve, reject) {
     collection.find({
