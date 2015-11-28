@@ -7,6 +7,7 @@ const logger = require("../logger");
 const communityEventQueue = require("./community-event-queue");
 const communitiesModel = require("../models/communities-model");
 const communityCommands = require("./community-constants").commands;
+const communityValidator = require("../models/community-validator");
 
 router.get("/community", (req, res) => {
   communitiesModel.findAll().then(communities => {
@@ -18,13 +19,10 @@ router.get("/community", (req, res) => {
   });
 });
 
-router.post("/community", (req, res) => {
-  // TODO Validate data
-  const communityName = req.body.name;
-  const communityDescription = req.body.description;
+router.post("/community", communityValidator.middleware, (req, res) => {
+  const community = req.$community;
   const communityId = uuid.v4();
-
-  communitiesModel.exist(communityName).then(isExist => {
+  communitiesModel.exist(community.name).then(isExist => {
     if (isExist) {
       res.status(400).json({
         message: "Community already exist"
@@ -34,8 +32,8 @@ router.post("/community", (req, res) => {
         type: communityCommands.community_create,
         data: {
           community_id: communityId,
-          name: communityName,
-          description: communityDescription,
+          name: community.name,
+          description: community.description,
           user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
         }
       }).then(() => {
@@ -51,6 +49,7 @@ router.post("/community", (req, res) => {
 });
 
 router.put("/community/:community_id", (req, res) => {
+  // TODO validate update data
   const community_id = req.params.community_id;
   const user = {
     user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
