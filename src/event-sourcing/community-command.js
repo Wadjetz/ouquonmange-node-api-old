@@ -10,7 +10,7 @@ const communityCommands = require("./community-constants").commands;
  * @return Promise<Array<Event>> events
  */
 function computeCommunityCommand(command, state) {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     switch (command.type) {
       case communityCommands.community_create:
         resolve([{

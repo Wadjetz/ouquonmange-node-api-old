@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const uuid = require("node-uuid");
+const lodash = require("lodash");
 const logger = require("../logger");
 const communityEventQueue = require("./community-event-queue");
 const communitiesModel = require("../models/communities-model");
@@ -10,7 +11,8 @@ router.get("/community", (req, res) => {
     res.json(communities);
   }).catch(error => {
     logger.error(error);
-    res.status(500).json(error); // TODO Security: too much info in error
+    // TODO Security: too much info in error
+    res.status(500).json(error);
   });
 });
 
@@ -64,22 +66,37 @@ router.put("/community/:community_id", (req, res) => {
   }).then(() => {
     res.json(update);
   }).catch(error => {
-    res.status(error.code).json(error);
+    // TODO Security: too much info in error
+    res.status(500).json(error);
   });
 });
 
 router.post("/community/:community_id/adduser/:user_id", (req, res) => {
+  // TODO remove user_id from url and put her in body
   // TODO check if user exist
   // TODO check if community exist
   const user_id = req.params.user_id;
   const community_id = req.params.community_id;
-  communityEventQueue.add({
-    type: communityCommands.community_add_user,
-    data: {
-      community_id: community_id,
-      user_id: user_id
+  communitiesModel.findById(community_id).then(community => {
+    if (lodash.contains(community.users, user_id)) {
+      return Promise.reject({
+        code: 400,
+        message: "user already added"
+      });
+    } else {
+      return communityEventQueue.add({
+        type: communityCommands.community_add_user,
+        data: {
+          community_id: community_id,
+          user_id: user_id
+        }
+      });
     }
-  }).then(() => res.json({}));
+  }).then(() => {
+    res.json({});
+  }).catch(error => {
+    res.status(error.code).json(error);
+  });
 });
 
 module.exports = router;
