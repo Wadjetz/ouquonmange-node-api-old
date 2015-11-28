@@ -1,3 +1,5 @@
+"use strict";
+
 const communityEvents = require("./community-constants").events;
 
 /**

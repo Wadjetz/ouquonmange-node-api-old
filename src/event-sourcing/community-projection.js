@@ -1,3 +1,5 @@
+"use strict";
+
 const communitiesModel = require("../models/communities-model");
 const communityEvents = require("./community-constants").events;
 

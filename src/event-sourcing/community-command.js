@@ -1,3 +1,5 @@
+"use strict";
+
 const uuid = require("node-uuid");
 const lodash = require("lodash");
 const communityEvents = require("./community-constants").events;

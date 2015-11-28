@@ -1,3 +1,5 @@
+"use strict";
+
 const BullQueue = require("bull");
 const es = require("./event-store");
 const logger = require("../logger");

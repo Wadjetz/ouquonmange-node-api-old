@@ -1,3 +1,5 @@
+"use strict";
+
 const describe = require("mocha/lib/mocha").describe;
 const it = require("mocha/lib/mocha").it;
 const expect = require("chai").expect;

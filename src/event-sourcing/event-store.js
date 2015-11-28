@@ -1,3 +1,5 @@
+"use strict";
+
 const DB = require("./../database");
 const Timestamp = require("mongodb").Timestamp;
 

@@ -1,3 +1,5 @@
+"use strict";
+
 const router = require("express").Router();
 const uuid = require("node-uuid");
 const lodash = require("lodash");
