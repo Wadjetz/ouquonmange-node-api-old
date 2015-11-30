@@ -25,6 +25,9 @@ function computeCommunityState(events) {
           if (event.update["name"]) acc["name"] = event.update["name"];
           if (event.update["description"]) acc["description"] = event.update["description"];
           return acc;
+        case communityEvents.community_deleted:
+          acc["update"]["deleted"] = true;
+          return acc;
         default:
           // TODO think to how stop the reduce function
           reject({ message: "Unknown community event" });

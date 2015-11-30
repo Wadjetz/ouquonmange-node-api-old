@@ -50,13 +50,23 @@ function computeCommunityCommand(command, state) {
         if (command.data.update["description"]) {
           update["description"] = command.data.update["description"];
         }
-        let event = {
+        resolve([{
           event_id: uuid.v4(),
           event_type: communityEvents.community_updated,
           community_id: command.data.community_id,
           update: update
-        };
-        resolve([event]);
+        }]);
+        break;
+      case communityCommands.community_delete:
+        resolve([{
+          event_id: uuid.v4(),
+          event_type: communityEvents.community_deleted,
+          community_id: command.data.community_id,
+          user_id: command.data.user_id,
+          update: {
+            deleted: true
+          }
+        }]);
         break;
       default: reject({
         message: "unknown command"

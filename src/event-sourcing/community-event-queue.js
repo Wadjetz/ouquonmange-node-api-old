@@ -62,6 +62,9 @@ communityEventQueue.process((job, done) => {
     case communityCommands.community_update:
       processCommunity(command, done);
       break;
+    case communityCommands.community_delete:
+      processCommunity(command, done);
+      break;
     case communityCommands.community_migration:
       logger.warn("process migration");
       es.findAll().then(events => {

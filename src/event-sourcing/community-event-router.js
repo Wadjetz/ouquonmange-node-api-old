@@ -72,6 +72,31 @@ router.put("/community/:community_id", (req, res) => {
   });
 });
 
+router.delete("/community/:community_id", (req, res) => {
+  // TODO validate update data
+  const community_id = req.params.community_id;
+  const user = {
+    user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
+  };
+  communitiesModel.findById(community_id).then(community => {
+    return communityEventQueue.add({
+      type: communityCommands.community_delete,
+      data: {
+        community_id: community_id,
+        user: user,
+        update: {
+          deleted: true
+        }
+      }
+    });
+  }).then(() => {
+    res.json({});
+  }).catch(error => {
+    // TODO Security: too much info in error
+    res.status(500).json(error);
+  });
+});
+
 router.post("/community/:community_id/adduser/:user_id", (req, res) => {
   // TODO remove user_id from url and put her in body
   // TODO check if user exist
