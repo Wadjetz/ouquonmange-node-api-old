@@ -74,6 +74,7 @@ router.put("/community/:community_id", (req, res) => {
 
 router.delete("/community/:community_id", (req, res) => {
   // TODO validate update data
+  // TODO debug event user_id: null
   const community_id = req.params.community_id;
   const user = {
     user_id: "bda484c3-f9b0-44cf-899e-63cd59abe1c3"
