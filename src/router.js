@@ -1,7 +1,9 @@
+"use strict";
+
 const router = require("express").Router();
 
 router.get("/api", (req, res) => {
-  res.json({});
+    res.json({});
 });
 
 module.exports = router;

@@ -1,22 +1,24 @@
+"use strict";
+
 const cluster = require("cluster");
 const app = require("./app");
 const logger = require("./logger");
 
 module.exports = function () {
-  cluster.schedulingPolicy = cluster.SCHED_RR;
+    cluster.schedulingPolicy = cluster.SCHED_RR;
 
-  if(cluster.isMaster) {
-    const cpuCount = 1; //require("os").cpus().length;
+    if(cluster.isMaster) {
+        const cpuCount = 1; //require("os").cpus().length;
 
-    for (var i=0; i < cpuCount; i++) {
-      cluster.fork();
+        for (var i=0; i < cpuCount; i++) {
+            cluster.fork();
+        }
+    } else {
+        app(cluster);
     }
-  } else {
-    app(cluster);
-  }
 
-  cluster.on("fork", worker =>
-    logger.debug("forked -> Worker %d", worker.id)
-  );
+    cluster.on("fork", worker =>
+        logger.debug("forked -> Worker %d", worker.id)
+    );
 
 };

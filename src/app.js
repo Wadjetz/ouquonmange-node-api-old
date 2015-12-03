@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -8,37 +10,37 @@ const conf = require("./config");
 const morgan = require("morgan");
 
 module.exports = function (cluster) {
-  const app = express();
+    const app = express();
 
-  app.use(bodyParser.urlencoded({
-    extended: false
-  }));
-
-  app.use(bodyParser.json());
-
-  app.use(cookieParser());
-
-  app.use(session({
-    secret: conf.get("APP_SESSION_SECRET"),
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  }));
-
-  if (conf.get("REQUEST_LOGS")) {
-    app.use(morgan(conf.get("REQUEST_LOGS_TYPE"), {
-      stream: logger.stream
+    app.use(bodyParser.urlencoded({
+        extended: false
     }));
-  }
 
-  app.use("/", router);
+    app.use(bodyParser.json());
 
-  app.use(express.static("public"));
+    app.use(cookieParser());
 
-  var server = app.listen(conf.get("APP_NODEJS_PORT"), () => {
-    var host = server.address().address;
-    var port = server.address().port;
+    app.use(session({
+        secret: conf.get("APP_SESSION_SECRET"),
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: true }
+    }));
 
-    logger.debug(`App worker ${cluster.worker.id} listening at http://${host}:${port}`);
-  });
+    if (conf.get("REQUEST_LOGS")) {
+        app.use(morgan(conf.get("REQUEST_LOGS_TYPE"), {
+            stream: logger.stream
+        }));
+    }
+
+    app.use("/", router);
+
+    app.use(express.static("public"));
+
+    const server = app.listen(conf.get("APP_NODEJS_PORT"), () => {
+        const host = server.address().address;
+        const port = server.address().port;
+
+        logger.debug(`App worker ${cluster.worker.id} listening at http://${host}:${port}`);
+    });
 };
