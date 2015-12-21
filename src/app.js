@@ -8,6 +8,8 @@ const router = require("./router");
 const logger = require("./logger");
 const conf = require("./config");
 const morgan = require("morgan");
+const localAuth = require("./auth/auth-local");
+const mongoose = require("mongoose");
 
 module.exports = function (cluster) {
     const app = express();
@@ -33,7 +35,12 @@ module.exports = function (cluster) {
         }));
     }
 
-    app.use("/", router);
+    mongoose.Promise = Promise;
+    mongoose.connect(`mongodb://${conf.get("MONGODB_HOST")}:${conf.get("MONGODB_PORT")}/ouquonmange`);
+
+    app.post("/auth/local/signup", localAuth.localSignup);
+    app.post("/auth/local/signup", localAuth.localSignup);
+    
 
     app.use(express.static("public"));
 
